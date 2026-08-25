@@ -17,7 +17,9 @@ uses
   Atlas.Fiscal.Domain.Document in '..\..\src\Atlas.Fiscal.Domain\Atlas.Fiscal.Domain.Document.pas',
   Atlas.Integration.Resilience in '..\..\src\Atlas.Integration\Atlas.Integration.Resilience.pas',
   Atlas.Processing.JobQueue in '..\..\src\Atlas.Processing\Atlas.Processing.JobQueue.pas',
-  Atlas.Security.Authorization in '..\..\src\Atlas.Security\Atlas.Security.Authorization.pas';
+  Atlas.Security.Authorization in '..\..\src\Atlas.Security\Atlas.Security.Authorization.pas',
+  Atlas.Database.Migrations in '..\..\src\Atlas.Database\Atlas.Database.Migrations.pas',
+  Atlas.Architecture.DependencyRules in '..\..\src\Atlas.Architecture\Atlas.Architecture.DependencyRules.pas';
 
 procedure Check(const ACondition: Boolean; const AMessage: string);
 begin
@@ -279,6 +281,43 @@ begin
   end;
 end;
 
+procedure TestMigrationLedger;
+var
+  Ledger: TMigrationLedger;
+  Migration: TMigration;
+  ChecksumConflictDetected: Boolean;
+begin
+  Ledger := TMigrationLedger.Create;
+  try
+    Migration := TMigration.Create(14, 'add_outbox', 'sha256:original');
+    Check(Ledger.NeedsApply(Migration), 'Migration nova deveria estar pendente.');
+    Ledger.RegisterApplied(Migration);
+    Check(not Ledger.NeedsApply(Migration),
+      'Migration registrada não deveria executar novamente.');
+    ChecksumConflictDetected := False;
+    try
+      Ledger.NeedsApply(TMigration.Create(14, 'add_outbox', 'sha256:alterado'));
+    except
+      on E: EInvalidOpException do
+        ChecksumConflictDetected := True;
+    end;
+    Check(ChecksumConflictDetected,
+      'Alterar migration aplicada deveria produzir conflito.');
+  finally
+    Ledger.Free;
+  end;
+end;
+
+procedure TestArchitectureDependencies;
+begin
+  Check(not TDependencyRules.Allows(lyDomain, lyInfrastructure),
+    'Domínio não deve depender da infraestrutura.');
+  Check(TDependencyRules.Allows(lyInfrastructure, lyApplication),
+    'Infraestrutura pode implementar portas da aplicação.');
+  Check(TDependencyRules.Allows(lyHost, lyInfrastructure),
+    'Host pode compor implementações concretas.');
+end;
+
 begin
   TestDiscountPolicy;
   TestMovementBalance;
@@ -292,5 +331,7 @@ begin
   TestIntegrationResilience;
   TestRecoverableJob;
   TestAuthorizationAndAudit;
-  Writeln('12 testes de domínio executados com sucesso.');
+  TestMigrationLedger;
+  TestArchitectureDependencies;
+  Writeln('14 testes de domínio executados com sucesso.');
 end.

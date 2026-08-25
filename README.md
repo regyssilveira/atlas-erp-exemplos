@@ -2,7 +2,7 @@
 
 Código didático do livro **Engenharia de ERP com Delphi: Arquitetura para sistemas empresariais que precisam crescer e durar**, de Régys Borges da Silveira.
 
-O repositório acompanha a evolução arquitetural do Atlas ERP e contém exemplos executáveis de domínio, consistência, integrações, processamento assíncrono, segurança e auditoria. Os exemplos tornam decisões verificáveis; não constituem um ERP pronto para produção.
+O repositório acompanha a evolução arquitetural do Atlas ERP e contém exemplos executáveis de domínio, consistência, integrações, processamento assíncrono, segurança, auditoria, migrations e regras de dependência. Os exemplos tornam decisões verificáveis; não constituem um ERP pronto para produção.
 
 ## Requisitos
 
