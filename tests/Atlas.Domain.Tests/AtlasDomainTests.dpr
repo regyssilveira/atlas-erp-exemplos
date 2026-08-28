@@ -15,6 +15,7 @@ uses
   Atlas.Inventory.Domain.Position in '..\..\src\Atlas.Inventory.Domain\Atlas.Inventory.Domain.Position.pas',
   Atlas.Finance.Domain.Receivable in '..\..\src\Atlas.Finance.Domain\Atlas.Finance.Domain.Receivable.pas',
   Atlas.Fiscal.Domain.Document in '..\..\src\Atlas.Fiscal.Domain\Atlas.Fiscal.Domain.Document.pas',
+  Atlas.Fiscal.Domain.TaxSnapshot in '..\..\src\Atlas.Fiscal.Domain\Atlas.Fiscal.Domain.TaxSnapshot.pas',
   Atlas.Integration.Resilience in '..\..\src\Atlas.Integration\Atlas.Integration.Resilience.pas',
   Atlas.Processing.JobQueue in '..\..\src\Atlas.Processing\Atlas.Processing.JobQueue.pas',
   Atlas.Security.Authorization in '..\..\src\Atlas.Security\Atlas.Security.Authorization.pas',
@@ -207,6 +208,24 @@ begin
   end;
 end;
 
+procedure TestVersionedTaxSnapshot;
+var
+  Snapshot: TTaxDecisionSnapshot;
+begin
+  Snapshot := TTaxDecisionSnapshot.Create('SALE-8457', 'rtc-sale-v3',
+    '2026.08.18', 'sha256:input-8457', 'sha256:result-8457');
+  try
+    Check(Snapshot.MatchesInput('sha256:input-8457'),
+      'O snapshot deveria reconhecer os dados que originaram o cálculo.');
+    Check(Snapshot.CanReproduceWith('rtc-sale-v3', '2026.08.18'),
+      'Reprodução exige a mesma política e o mesmo catálogo.');
+    Check(not Snapshot.CanReproduceWith('rtc-sale-v4', '2026.08.25'),
+      'Uma política posterior não deveria reinterpretar o resultado histórico.');
+  finally
+    Snapshot.Free;
+  end;
+end;
+
 procedure TestIntegrationResilience;
 var
   Breaker: TCircuitBreaker;
@@ -328,10 +347,11 @@ begin
   TestStockReservation;
   TestPartialAndDuplicatePayment;
   TestUnknownFiscalResult;
+  TestVersionedTaxSnapshot;
   TestIntegrationResilience;
   TestRecoverableJob;
   TestAuthorizationAndAudit;
   TestMigrationLedger;
   TestArchitectureDependencies;
-  Writeln('14 testes de domínio executados com sucesso.');
+  Writeln('15 testes de domínio executados com sucesso.');
 end.
