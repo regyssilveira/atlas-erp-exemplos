@@ -24,6 +24,10 @@ A suíte FireDAC cria um schema descartável e verifica transação, rollback, c
 
 Esse recorte não comprova concorrência entre duas conexões nem a semântica de isolamento, locking e DDL de Firebird, PostgreSQL ou SQL Server. Esses comportamentos precisam de suítes próprias contra o SGBD adotado pelo produto, conforme advertido no livro.
 
+## O que cada exemplo prova
+
+A matriz [EXAMPLES.md](EXAMPLES.md) relaciona os 17 capítulos às units, aos testes e aos limites declarados. Os roteiros em [EXPERIMENTS.md](EXPERIMENTS.md) mostram como exercitar concorrência real, recuperação de worker, retomada de migration, convivência de políticas fiscais e autorização por múltiplos canais no ambiente do produto.
+
 ## Recorte fiscal da reforma tributária
 
 `TTaxDecisionSnapshot` conserva a identidade da operação, da política, do catálogo e das entradas usadas em uma decisão fiscal. O teste demonstra que uma política posterior não deve reinterpretar silenciosamente um resultado histórico.
