@@ -23,6 +23,18 @@ Abra cada projeto no RAD Studio ou execute `dcc32` a partir da pasta em que o re
 
 ## Recorte da integração FireDAC
 
+## Build e pacote didático
+
+`scripts/build-test-package.ps1` compila as três suítes com um `dcc32.exe` explicitamente selecionado, executa cada uma e cria um pacote de executáveis de teste somente se todas passarem. Cada execução exige um nome novo; arquivos de saída anteriores não são reutilizados nem removidos.
+
+```powershell
+./scripts/build-test-package.ps1 -CompilerPath 'C:/Program Files (x86)/Embarcadero/Studio/37.0/bin/dcc32.exe' -RunName ensaio-local
+```
+
+Os resultados ficam em `build/<RunName>/`, com logs e manifesto de digests SHA-256. Consulte [BUILD_VERIFICATION.md](BUILD_VERIFICATION.md) para evidência do bloqueio diante de falha. O pacote é didático: não é instalador de ERP, não executa MSBuild, análise estática, cobertura, assinatura, SBOM nem deploy. Essas etapas precisam de configuração e verificação próprias.
+
+### Integração FireDAC
+
 A suíte FireDAC cria um schema descartável e verifica transação, rollback, commit, atualização otimista por versão e registro persistido de idempotência. SQLite foi escolhido para manter o teste reproduzível sem instalar ou configurar um servidor.
 
 Esse recorte não comprova concorrência entre duas conexões nem a semântica de isolamento, locking e DDL de Firebird, PostgreSQL ou SQL Server. Esses comportamentos precisam de suítes próprias contra o SGBD adotado pelo produto, conforme advertido no livro.

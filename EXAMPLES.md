@@ -21,6 +21,7 @@ Esta matriz informa o que cada recorte do Atlas demonstra, qual evidência execu
 | 14 | job recuperável | `Atlas.Processing.JobQueue` | estados, tentativas e deduplicação | fila em memória, sem lease persistente |
 | 15 | autorização e auditoria | `Atlas.Security.Authorization` | negação por padrão e correlação | não fornece IAM, armazenamento imutável ou observabilidade completa |
 | 16 | histórico de migrations | `Atlas.Database.Migrations` | versão e conflito de checksum | não executa DDL nem backfill |
+| 16 | produzir pacote somente após testes | `scripts/build-test-package.ps1` | três suítes recompiladas; falha injetada impede criação de pacote; restauração aprovada | pacote didático de testes, sem MSBuild, assinatura ou deploy |
 | 17 | limites verificáveis | suíte de domínio e regras arquiteturais | 15 testes autocontidos | não substitui testes do produto e de sua infraestrutura |
 
 ## Como interpretar a matriz
