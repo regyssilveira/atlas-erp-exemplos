@@ -11,10 +11,13 @@ O repositório acompanha a evolução arquitetural do Atlas ERP e contém exempl
 
 ## Executar os testes
 
-O repositório possui duas suítes:
+O repositório possui três suítes:
 
 - `tests/Atlas.Domain.Tests/AtlasDomainTests.dpr`: 15 testes autocontidos de domínio, sem banco ou rede;
 - `tests/Atlas.Persistence.FireDAC.Tests/AtlasPersistenceFireDACTests.dpr`: quatro testes de integração com FireDAC e SQLite em memória.
+- `tests/Atlas.Legacy.Tests/AtlasLegacyTests.dpr`: nove casos de caracterização executados no caminho anterior e na regra extraída. Inclui uma anomalia conhecida, cuja preservação não significa aprovação funcional.
+
+O recorte legado isola uma decisão que poderia estar num evento. Não automatiza uma Form real nem demonstra que o ERP inteiro foi caracterizado. Os dois caminhos usam o mesmo tipo monetário; por isso, não constituem verificações independentes do arredondamento. Casos com expectativas explícitas evitam depender apenas da comparação entre implementações.
 
 Abra cada projeto no RAD Studio ou execute `dcc32` a partir da pasta em que o respectivo `.dpr` se encontra. Os caminhos das units são relativos ao diretório do projeto.
 

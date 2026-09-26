@@ -9,6 +9,7 @@ Esta matriz informa o que cada recorte do Atlas demonstra, qual evidência execu
 | 3 | dependências entre módulos | `Atlas.Architecture.DependencyRules` | teste de direções permitidas | não analisa automaticamente todos os fontes |
 | 4 | transação e persistência real | `Atlas.Persistence.FireDAC.Store`; suíte FireDAC | commit, rollback, versão e idempotência em SQLite | não prova isolamento dos SGBDs de produção |
 | 5 | regra comercial explícita | `Atlas.Sales.Rules.Discount` | decisões aceitas e rejeitadas | política didática, sem catálogo comercial completo |
+| 5 | proteger a extração de uma decisão antiga | `Atlas.Legacy.Discount`; `AtlasLegacyTests` | nove casos nos caminhos anterior e extraído; mutação de fronteira detectada | recorte sem Form real; anomalia conhecida não aprovada; arredondamento compartilhado |
 | 6 | movimento e vigência | `Atlas.Inventory.Domain.Movement`; `Atlas.Commercial.Domain.EffectivePrice` | saldo por movimentos e intervalo efetivo | não implementa banco temporal completo |
 | 7 | concorrência e repetição | `Atlas.Consistency.OptimisticLock`; `Idempotency` | conflito de versão e replay | concorrência é simulada em memória |
 | 8 | contexto e precedência | `Atlas.Shared.Context`; `Atlas.Configuration.PolicyResolver` | regra mais específica prevalece | não cobre autenticação nem isolamento físico |
